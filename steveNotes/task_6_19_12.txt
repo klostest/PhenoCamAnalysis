@@ -1,0 +1,2 @@
+Tom will replicate a image processing result generated from ROI masks we give him.
+send tom masks, mask guide, and time series file for him to replicate.
