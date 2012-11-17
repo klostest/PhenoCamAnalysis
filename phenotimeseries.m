@@ -145,8 +145,11 @@ cd(outdir)
 cd ROI
 masks = cell(numel(maskfiles),1);
 for j=1:numel(maskfiles)
-   masks{j} = load(maskfiles(j).name); 
+   % change mask file type from TIFF to Matlab .mat file
+   % matmskfilename = strrep(maskfiles(j).name,'.tif','.mat');   
+   masks{j} = imread(maskfiles(j).name); 
 end
+
 
 % set current directory and add to search path
 cd(indir) 
@@ -176,8 +179,6 @@ jpeg_files(tmp == 1) = [];
 
 % calculate number of JPEGs
 nrjpegs = size(jpeg_files,1);
-
-
 
 if isempty(jpeg_files)
     error('Contains no valid images, please select another directory')
@@ -267,11 +268,11 @@ for i=1:size_subset_images;
         subset_hour(i), subset_min(i),subset_sec(i));  
     imgdate = subset_year + results(i,2)./366;
     
-    % determine which mask to use and assign to "mask"
-    for j = 1:numel(maskfiles)
+    % determine which mask to use and assign to "mask"        
+    for j = 1:numel(maskfiles)        
         if imgdate >= maskfiles(j).beg && imgdate <= maskfiles(j).end     
-            mask = masks{j}.mask;
-        end
+            mask = masks{j};            
+        end        
     end
     
     % read in image, print out error message if file is corrupted
@@ -281,9 +282,13 @@ for i=1:size_subset_images;
         error(cat(2,'Unable to open image: ',subset_images(i,:)))
     end
     % make sure they are the same dimensions
+    if exist('mask','var') == 0
+        disp(subset_images(i,:))
+        disp(imgdate) 
+    end
     if size(img,1) ~= size(mask,1) || size(img,2) ~= size(mask,2)  
         error(cat(2,'Mask and input image are not the same dimensions: ',...
-            subset_images(i,:)))
+            subset_images(i,:)))    
     end
     
     % split image into its components
@@ -293,11 +298,11 @@ for i=1:size_subset_images;
     
     % calculate green chromatic coordinates    
     % load individual band values to results columns 3-5
-    meanred = mean(mean(red(mask == 1)));
+    meanred = mean(mean(red(mask == 0)));
     results(i,3) = meanred;
-    meangreen = mean(mean(green(mask == 1)));
+    meangreen = mean(mean(green(mask == 0)));
     results(i,4) = meangreen;
-    meanblue = mean(mean(blue(mask == 1)));
+    meanblue = mean(mean(blue(mask == 0)));
     results(i,5) = meanblue;
 
     % calculate green chromatic coordinates
