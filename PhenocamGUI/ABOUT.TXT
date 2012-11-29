@@ -1,0 +1,13 @@
+For more information about Phenocam and to acquire Phenocam data, please visit: http://phenocam.sr.unh.edu
+
+The primary objective of the PhenoCam project is to use automated, near-surface remote sensing to provide continuous, real-time monitoring of vegetation phenology across a range of ecosystems and climate zones.
+
+References:
+
+Richardson, A.D., J.P. Jenkins, B.H. Braswell, D.Y. Hollinger, S.V. Ollinger, and M.-L. Smith. Use of digital webcam images to track spring green-up in a deciduous broadleaf forest. Oecologia, doi10.1007/s00442-006-0657-z, 2007.
+
+Richardson, A.D., B.H. Braswell, D.Y. Hollinger, J.P. Jenkins and S.V. Ollinger. 2009. Near-surface remote sensing of spatial and temporal variation in canopy phenology. Ecological Applications, 19(6): 1417-1428.
+
+Sonnentag O., Hufkens K.,Teshera-Sterne C., Young A. M., Friedl M., Braswell B. H.,Milliman T., O'Keefe J., Richardson A. D. Digital repeat photography for phenological research in forest ecosystems. Agricultural and Forest Meteorology (accepted)
+
+Hufkens K., Richardson A. D., Sonnentag O., Braswell B. H., Milliman T., Friedl M. Linking near-surface and satellite remote sensing measurements of deciduous broadleaf forest phenology. Remote Sensing of Environment (submitted)
