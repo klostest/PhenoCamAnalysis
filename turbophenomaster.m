@@ -16,29 +16,32 @@
 % # site: umichbiological2
 % # description: "deciduous trees in foreground"
 % #
-% # start_date,start_time,end_date,end_time,maskfile,sample_image
-% 2008-11-24,11:01:39,2009-08-07,08:31:37,umichbiological2_deciduous_2008-11-24_2009-08-07.mat,umichbiological2_2009_07_16_150137.jpg
-% 2009-09-03,14:02:24,9999-12-31,23:59:59,umichbiological2_deciduous_after_2009-09-03.mat,umichbiological2_2010_10_11_133126.jpg
+% start_date,start_time,end_date,end_time,maskfile,sample_image
+% 2008-11-24,11:01:39,2009-08-07,08:31:37,umichbiological2_deciduous_2008-11-24_2009-08-07.tif,umichbiological2_2009_07_16_150137.jpg
+% 2009-09-03,14:02:24,9999-12-31,23:59:59,umichbiological2_deciduous_after_2009-09-03.tif,umichbiological2_2010_10_11_133126.jpg
 %
 % To execute, assign all user-defined variables in the next section below.
 % The key variables are the folder variables, "basedir" and "sites", as
 % well as "maskguidefilter". For most uses, the remaining variables can be
 % left as defaults.
-
+%
+% last modified on December 10, 2012
+% by Michael Toomey, mtoomey@fas.harvard.edu, based on the original code by
+% Koen Hufkens
 %%%%%%%%%%%%%%%%%%%%%%%% USER DEFINED VARIABLES %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % base directory, the one that contains all site directories
 basedir = 'C:\OEB\PhenoCam\webcam\';
 % filter for maskguide files, which should have the endings, "*roi.csv"
-maskguidefilter = '*coniferous*roi.csv';
+maskguidefilter = '*deciduous*roi.csv';
 % sites to process, in a cell array
-sites = {'howland1'};
+sites = {'bartlett'};
 % size of window for smoothing - default is 3
 windowsize = 3;
 % start and ending time (military time/24h), default is 6 and 18
-sttime  = 10;
-endtime = 14;
+sttime  = 6;
+endtime = 18;
 % minimum brightness threshold, in percentage, default is 15
-threshold = 5;
+threshold = 15;
 % smoothing technique, where 1 = 90th percentile, 2 = mean, 3 = median,
 % default is 1
 smoothtechnique = 1;

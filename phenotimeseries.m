@@ -57,8 +57,10 @@ function phenotimeseries(indir,outdir,maskfiles,masktype,windowsize,sttime,endti
 % Original code written by Koen Hufkens, khufkens@bu.edu, Sept. 2011,
 % published under a GPLv2 license and is free to redistribute.
 %
+% Last modified on December 10, 2012 to require TIFF format masks.
+%
 % Matlab function file written by Michael Toomey, mtoomey@fas.harvard.edu,
-% January 27, 2011
+% January 27, 2012
 %
 % Please reference the necessary publications when using the
 % the 90th percentile method:
@@ -145,9 +147,10 @@ cd(outdir)
 cd ROI
 masks = cell(numel(maskfiles),1);
 for j=1:numel(maskfiles)
-   % change mask file type from TIFF to Matlab .mat file
-   % matmskfilename = strrep(maskfiles(j).name,'.tif','.mat');   
-   masks{j} = imread(maskfiles(j).name); 
+    if isempty(maskfiles(j).name,'.tif') == 1
+        error('Mask file must be in TIFF format')
+    end
+    masks{j} = imread(maskfiles(j).name); 
 end
 
 

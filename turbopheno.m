@@ -59,7 +59,7 @@ tline = 'scrap';
 while ischar(tline)    
     tline = fgetl(fid);
     % make sure input is a character and not a comment (#)
-    if ischar(tline) == 1 && tline(1) ~= '#' && strcmp(tline(1:10),'start_date') == 0
+    if ischar(tline) == 1 && numel(tline) ~= 0 && tline(1) ~= '#' && strcmp(tline(1:10),'start_date') == 0
         % increment i by 1
         i = i+1;
         % parse line by commas
