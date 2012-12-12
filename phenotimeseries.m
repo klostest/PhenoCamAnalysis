@@ -258,7 +258,7 @@ max_doy = max(unique(subset_doy));
 min_doy = min(unique(subset_doy));
 
 % make a matrix to contain the results (length list, indices - 5)
-results = zeros(size_subset_images,6);
+results = nan(size_subset_images,6);
 
 % fill year column
 results(:,1,:) = subset_year;
@@ -284,36 +284,39 @@ for i=1:size_subset_images;
     catch
         error(cat(2,'Unable to open image: ',subset_images(i,:)))
     end
-    % make sure they are the same dimensions
+    % check to see if there was a matching mask
     if exist('mask','var') == 0
-        disp(subset_images(i,:))
-        disp(imgdate) 
-    end
-    if size(img,1) ~= size(mask,1) || size(img,2) ~= size(mask,2)  
-        error(cat(2,'Mask and input image are not the same dimensions: ',...
-            subset_images(i,:)))    
-    end
-    
-    % split image into its components
-    red = img(:,:,1);
-    green = img(:,:,2);
-    blue = img(:,:,3);
-    
-    % calculate green chromatic coordinates    
-    % load individual band values to results columns 3-5
-    meanred = mean(mean(red(mask == 0)));
-    results(i,3) = meanred;
-    meangreen = mean(mean(green(mask == 0)));
-    results(i,4) = meangreen;
-    meanblue = mean(mean(blue(mask == 0)));
-    results(i,5) = meanblue;
+        disp(cat(2,'No mask for ',subset_images(i,:)))        
+    else
+        % make sure they are the same dimensions
+        if size(img,1) ~= size(mask,1) || size(img,2) ~= size(mask,2)
+            error(cat(2,'Mask and input image are not the same dimensions: ',...
+                subset_images(i,:)))    
+        end
 
-    % calculate green chromatic coordinates
-    gcc = meangreen ./ (meanred + meangreen + meanblue);
+        % split image into its components
+        red = img(:,:,1);
+        green = img(:,:,2);
+        blue = img(:,:,3);
 
-    % put gcc values in results
-    results(i,6) =  gcc;
-    
+        % calculate green chromatic coordinates    
+        % load individual band values to results columns 3-5
+        meanred = mean(mean(red(mask == 0)));
+        results(i,3) = meanred;
+        meangreen = mean(mean(green(mask == 0)));
+        results(i,4) = meangreen;
+        meanblue = mean(mean(blue(mask == 0)));
+        results(i,5) = meanblue;
+
+        % calculate green chromatic coordinates
+        gcc = meangreen ./ (meanred + meangreen + meanblue);
+
+        % put gcc values in results
+        results(i,6) =  gcc;
+
+        % clear the mask variable
+        clear mask
+    end
 end
 
 % create vector of days-of-year 
