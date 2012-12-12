@@ -147,8 +147,8 @@ cd(outdir)
 cd ROI
 masks = cell(numel(maskfiles),1);
 for j=1:numel(maskfiles)
-    if isempty(maskfiles(j).name,'.tif') == 1
-        error('Mask file must be in TIFF format')
+    if isempty(strfind(maskfiles(j).name,'.tif')) == 1
+        error('Warning: Mask file must be in TIFF format')
     end
     masks{j} = imread(maskfiles(j).name); 
 end

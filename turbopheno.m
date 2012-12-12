@@ -90,7 +90,7 @@ fclose(fid);
 cd ..
 % assign mask type to masktype
 tmp = regexp(maskguide,'_','split');
-masktype = cat(2,char(tmp{1}),'_',char(tmp{2}));
+masktype = cat(2,char(tmp{1}),'_',char(tmp{2}),'_',char(tmp{3}));
 
 % for all folders in "folders", open each and execute phenotimeseries, only
 % the input directory will change (folders{i})
