@@ -57,8 +57,10 @@ function phenotimeseries(indir,outdir,maskfiles,masktype,windowsize,sttime,endti
 % Original code written by Koen Hufkens, khufkens@bu.edu, Sept. 2011,
 % published under a GPLv2 license and is free to redistribute.
 %
+% Last modified on December 10, 2012 to require TIFF format masks.
+%
 % Matlab function file written by Michael Toomey, mtoomey@fas.harvard.edu,
-% January 27, 2011
+% January 27, 2012
 %
 % Please reference the necessary publications when using the
 % the 90th percentile method:
@@ -145,8 +147,12 @@ cd(outdir)
 cd ROI
 masks = cell(numel(maskfiles),1);
 for j=1:numel(maskfiles)
-   masks{j} = load(maskfiles(j).name); 
+    if isempty(strfind(maskfiles(j).name,'.tif')) == 1
+        error('Warning: Mask file must be in TIFF format')
+    end
+    masks{j} = imread(maskfiles(j).name); 
 end
+
 
 % set current directory and add to search path
 cd(indir) 
@@ -176,8 +182,6 @@ jpeg_files(tmp == 1) = [];
 
 % calculate number of JPEGs
 nrjpegs = size(jpeg_files,1);
-
-
 
 if isempty(jpeg_files)
     error('Contains no valid images, please select another directory')
@@ -254,7 +258,7 @@ max_doy = max(unique(subset_doy));
 min_doy = min(unique(subset_doy));
 
 % make a matrix to contain the results (length list, indices - 5)
-results = zeros(size_subset_images,6);
+results = nan(size_subset_images,6);
 
 % fill year column
 results(:,1,:) = subset_year;
@@ -267,11 +271,11 @@ for i=1:size_subset_images;
         subset_hour(i), subset_min(i),subset_sec(i));  
     imgdate = subset_year + results(i,2)./366;
     
-    % determine which mask to use and assign to "mask"
-    for j = 1:numel(maskfiles)
+    % determine which mask to use and assign to "mask"        
+    for j = 1:numel(maskfiles)        
         if imgdate >= maskfiles(j).beg && imgdate <= maskfiles(j).end     
-            mask = masks{j}.mask;
-        end
+            mask = masks{j};            
+        end        
     end
     
     % read in image, print out error message if file is corrupted
@@ -280,32 +284,39 @@ for i=1:size_subset_images;
     catch
         error(cat(2,'Unable to open image: ',subset_images(i,:)))
     end
-    % make sure they are the same dimensions
-    if size(img,1) ~= size(mask,1) || size(img,2) ~= size(mask,2)  
-        error(cat(2,'Mask and input image are not the same dimensions: ',...
-            subset_images(i,:)))
+    % check to see if there was a matching mask
+    if exist('mask','var') == 0
+        disp(cat(2,'No mask for ',subset_images(i,:)))        
+    else
+        % make sure they are the same dimensions
+        if size(img,1) ~= size(mask,1) || size(img,2) ~= size(mask,2)
+            error(cat(2,'Mask and input image are not the same dimensions: ',...
+                subset_images(i,:)))    
+        end
+
+        % split image into its components
+        red = img(:,:,1);
+        green = img(:,:,2);
+        blue = img(:,:,3);
+
+        % calculate green chromatic coordinates    
+        % load individual band values to results columns 3-5
+        meanred = mean(mean(red(mask == 0)));
+        results(i,3) = meanred;
+        meangreen = mean(mean(green(mask == 0)));
+        results(i,4) = meangreen;
+        meanblue = mean(mean(blue(mask == 0)));
+        results(i,5) = meanblue;
+
+        % calculate green chromatic coordinates
+        gcc = meangreen ./ (meanred + meangreen + meanblue);
+
+        % put gcc values in results
+        results(i,6) =  gcc;
+
+        % clear the mask variable
+        clear mask
     end
-    
-    % split image into its components
-    red = img(:,:,1);
-    green = img(:,:,2);
-    blue = img(:,:,3);
-    
-    % calculate green chromatic coordinates    
-    % load individual band values to results columns 3-5
-    meanred = mean(mean(red(mask == 1)));
-    results(i,3) = meanred;
-    meangreen = mean(mean(green(mask == 1)));
-    results(i,4) = meangreen;
-    meanblue = mean(mean(blue(mask == 1)));
-    results(i,5) = meanblue;
-
-    % calculate green chromatic coordinates
-    gcc = meangreen ./ (meanred + meangreen + meanblue);
-
-    % put gcc values in results
-    results(i,6) =  gcc;
-    
 end
 
 % create vector of days-of-year 

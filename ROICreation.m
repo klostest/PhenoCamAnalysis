@@ -16,15 +16,15 @@ function ROICreation(dir,imgfname,maskfilename,ROItype)
 %         ROItype = ROI type, where 1 =  free hand, 2 = ellipse, 3 =  rectangle
 %
 % EXAMPLE:
-%     ROICreation('C:\data\harvard\2009','harvard_2009_06_17_133139.jpg','harvardmask',2)
+%     ROICreation('C:\data\harvard\2009','harvard_2009_06_17_133139.jpg','harvardmask.tif',2)
 %         This example creates facilitates ROI creation for the image, 
 %         harvard_2009_06_17_133139.jpg, in directory,
 %         C:\data\harvard\2009; the ROI type is an ellipse, and the output
-%         file name will be 'harvardmask.mat' (the .MAT extension not
-%         necessary)
+%         file name will be 'harvardmask.tif'
 %
 % Written by Michael Toomey, mtoomey@fas.harvard.edu, January 27, 2012,
 % based on code by Koen Hufkens, khufkens@bu.edu.
+% Edited on November 17, 2012 to change output to TIFF file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if nargin < 4 % check input arguments
@@ -81,9 +81,14 @@ else
     error('ROItype must equal either 1, 2, or 3');    
 end
 
+mask = uint8(mask);
+
+mask(mask == 0) = 255;
+mask(mask == 1) = 0;
+
 % plot mask
 figure
 imagesc(mask); colormap(gray)
 
 % save mask
-save(maskfilename,'mask')
+imwrite(mask,maskfilename,'tif')

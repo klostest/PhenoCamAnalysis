@@ -59,7 +59,7 @@ tline = 'scrap';
 while ischar(tline)    
     tline = fgetl(fid);
     % make sure input is a character and not a comment (#)
-    if ischar(tline) == 1 && tline(1) ~= '#' && strcmp(tline(1:10),'start_date') == 0
+    if ischar(tline) == 1 && numel(tline) ~= 0 && tline(1) ~= '#' && strcmp(tline(1:10),'start_date') == 0
         % increment i by 1
         i = i+1;
         % parse line by commas
@@ -90,7 +90,7 @@ fclose(fid);
 cd ..
 % assign mask type to masktype
 tmp = regexp(maskguide,'_','split');
-masktype = cat(2,char(tmp{1}),'_',char(tmp{2}));
+masktype = cat(2,char(tmp{1}),'_',char(tmp{2}),'_',char(tmp{3}));
 
 % for all folders in "folders", open each and execute phenotimeseries, only
 % the input directory will change (folders{i})
