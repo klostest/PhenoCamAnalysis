@@ -1,0 +1,25 @@
+Replace lines 292-295 of phenotimeseries.m with this:
+    if size(img,1) ~= size(mask,1) || size(img,2) ~= size(mask,2)  
+        %% ***
+%         error(cat(2,'Mask and input image are not the same dimensions: ',...
+%             subset_images(i,:)))
+        fprintf(1, ['mask dimension mismatch, resizing: '...
+            subset_images(i,:) '\n']);
+        
+        %resize mask to fit image
+        picDim = size(img);
+        maskDim = size(mask);
+        newMask = zeros(picDim(1), picDim(2));
+        xRat = picDim(1)/maskDim(1);
+        yRat = picDim(2)/maskDim(2);
+            for j = 1:picDim(1)
+                for k = 1:picDim(2)
+                    if mask(ceil(j/xRat), ceil(k/yRat)) == 1
+                        newMask(j,k) = 1;
+                    end
+                end
+            end
+        mask = logical(newMask);
+%         continue
+        %% ***
+    end
