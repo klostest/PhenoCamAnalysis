@@ -1,4 +1,4 @@
-phenoFit v1_0.  Please email steve.klosterman@gmail.com with any bug fixes or suggestions.  Coauthorship is requested if you use this code to for published work.  Thanks!
+phenoFit v1_0.  Please email steve.klosterman@gmail.com with any bug fixes or suggestions.  Coauthorship is requested if you use this code for published work.  Thanks!
 
 The file runAll.m contains example arguments and will step you through the process.  Important functions are:
 
