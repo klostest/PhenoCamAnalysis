@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0108)http://www.gnu.org/software/gsl/manual/html_node/Computing-the-covariance-matrix-of-best-fit-parameters.html -->
+<html><!-- Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013 The GSL Team.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections and no cover texts.  A copy of the license is
+included in the section entitled "GNU Free Documentation License". --><!-- Created by GNU Texinfo 5.1, http://www.gnu.org/software/texinfo/ --><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>GNU Scientific Library – Reference Manual: Computing the covariance matrix of best fit parameters</title>
+
+<meta name="description" content="GNU Scientific Library – Reference Manual: Computing the covariance matrix of best fit parameters">
+<meta name="keywords" content="GNU Scientific Library – Reference Manual: Computing the covariance matrix of best fit parameters">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+
+<link href="http://www.gnu.org/software/gsl/manual/html_node/index.html#Top" rel="start" title="Top">
+<link href="http://www.gnu.org/software/gsl/manual/html_node/Function-Index.html#Function-Index" rel="index" title="Function Index">
+<link href="http://www.gnu.org/software/gsl/manual/html_node/Nonlinear-Least_002dSquares-Fitting.html#Nonlinear-Least_002dSquares-Fitting" rel="up" title="Nonlinear Least-Squares Fitting">
+<link href="http://www.gnu.org/software/gsl/manual/html_node/Example-programs-for-Nonlinear-Least_002dSquares-Fitting.html#Example-programs-for-Nonlinear-Least_002dSquares-Fitting" rel="next" title="Example programs for Nonlinear Least-Squares Fitting">
+<link href="http://www.gnu.org/software/gsl/manual/html_node/Minimization-Algorithms-without-Derivatives.html#Minimization-Algorithms-without-Derivatives" rel="previous" title="Minimization Algorithms without Derivatives">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.indentedblock {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smallindentedblock {margin-left: 3.2em; font-size: smaller}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style:oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nocodebreak {white-space:nowrap}
+span.nolinebreak {white-space:nowrap}
+span.roman {font-family:serif; font-weight:normal}
+span.sansserif {font-family:sans-serif; font-weight:normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en" bgcolor="#FFFFFF" text="#000000" link="#0000FF" vlink="#800080" alink="#FF0000">
+<a name="Computing-the-covariance-matrix-of-best-fit-parameters"></a>
+<div class="header">
+<p>
+Next: <a href="http://www.gnu.org/software/gsl/manual/html_node/Example-programs-for-Nonlinear-Least_002dSquares-Fitting.html#Example-programs-for-Nonlinear-Least_002dSquares-Fitting" accesskey="n" rel="next">Example programs for Nonlinear Least-Squares Fitting</a>, Previous: <a href="http://www.gnu.org/software/gsl/manual/html_node/Minimization-Algorithms-without-Derivatives.html#Minimization-Algorithms-without-Derivatives" accesskey="p" rel="previous">Minimization Algorithms without Derivatives</a>, Up: <a href="http://www.gnu.org/software/gsl/manual/html_node/Nonlinear-Least_002dSquares-Fitting.html#Nonlinear-Least_002dSquares-Fitting" accesskey="u" rel="up">Nonlinear Least-Squares Fitting</a> &nbsp; [<a href="http://www.gnu.org/software/gsl/manual/html_node/Function-Index.html#Function-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<hr>
+<a name="Computing-the-covariance-matrix-of-best-fit-parameters-1"></a>
+<h3 class="section">38.10 Computing the covariance matrix of best fit parameters</h3>
+<a name="index-best_002dfit-parameters_002c-covariance"></a>
+<a name="index-least-squares_002c-covariance-of-best_002dfit-parameters"></a>
+<a name="index-covariance-matrix_002c-nonlinear-fits"></a>
+
+<dl>
+<dt><a name="index-gsl_005fmultifit_005fcovar"></a>Function: <em>int</em> <strong>gsl_multifit_covar</strong> <em>(const gsl_matrix * <var>J</var>, double <var>epsrel</var>, gsl_matrix * <var>covar</var>)</em></dt>
+<dd><p>This function uses the Jacobian matrix <var>J</var> to compute the covariance
+matrix of the best-fit parameters, <var>covar</var>.  The parameter
+<var>epsrel</var> is used to remove linear-dependent columns when <var>J</var> is
+rank deficient.
+</p>
+<p>The covariance matrix is given by,
+</p>
+<div class="example">
+<pre class="example">covar = (J^T J)^{-1}
+</pre></div>
+
+<p>and is computed by QR decomposition of J with column-pivoting.  Any
+columns of <em>R</em> which satisfy 
+</p>
+<div class="example">
+<pre class="example">|R_{kk}| &lt;= epsrel |R_{11}|
+</pre></div>
+
+<p>are considered linearly-dependent and are excluded from the covariance
+matrix (the corresponding rows and columns of the covariance matrix are
+set to zero).
+</p>
+<p>If the minimisation uses the weighted least-squares function
+<em>f_i = (Y(x, t_i) - y_i) / \sigma_i</em> then the covariance
+matrix above gives the statistical error on the best-fit parameters
+resulting from the Gaussian errors <em>\sigma_i</em> on 
+the underlying data <em>y_i</em>.  This can be verified from the relation 
+<em>\delta f = J \delta c</em> and the fact that the fluctuations in <em>f</em>
+from the data <em>y_i</em> are normalised by <em>\sigma_i</em> and 
+so satisfy <em>&lt;\delta f \delta f^T&gt; = I</em>.
+</p>
+<p>For an unweighted least-squares function <em>f_i = (Y(x, t_i) -
+y_i)</em> the covariance matrix above should be multiplied by the variance
+of the residuals about the best-fit <em>\sigma^2 = \sum (y_i - Y(x,t_i))^2 / (n-p)</em>
+to give the variance-covariance
+matrix <em>\sigma^2 C</em>.  This estimates the statistical error on the
+best-fit parameters from the scatter of the underlying data.
+</p>
+<p>For more information about covariance matrices see <a href="http://www.gnu.org/software/gsl/manual/html_node/Fitting-Overview.html#Fitting-Overview">Fitting Overview</a>.
+</p></dd></dl>
+
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="http://www.gnu.org/software/gsl/manual/html_node/Example-programs-for-Nonlinear-Least_002dSquares-Fitting.html#Example-programs-for-Nonlinear-Least_002dSquares-Fitting" accesskey="n" rel="next">Example programs for Nonlinear Least-Squares Fitting</a>, Previous: <a href="http://www.gnu.org/software/gsl/manual/html_node/Minimization-Algorithms-without-Derivatives.html#Minimization-Algorithms-without-Derivatives" accesskey="p" rel="previous">Minimization Algorithms without Derivatives</a>, Up: <a href="http://www.gnu.org/software/gsl/manual/html_node/Nonlinear-Least_002dSquares-Fitting.html#Nonlinear-Least_002dSquares-Fitting" accesskey="u" rel="up">Nonlinear Least-Squares Fitting</a> &nbsp; [<a href="http://www.gnu.org/software/gsl/manual/html_node/Function-Index.html#Function-Index" title="Index" rel="index">Index</a>]</p>
+</div>
+
+
+
+
+
+</body></html>
