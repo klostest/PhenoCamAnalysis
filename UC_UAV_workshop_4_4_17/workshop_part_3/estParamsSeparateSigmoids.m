@@ -18,30 +18,6 @@ function [params, modelT, modelY, cutOffDates, resnorm, initGuess,...
 %
 % dataY is a vector of input data
 %
-%% dependencies
-% getSigDate.m and dataDiff.m must be in the current directory
-%
-%% notes
-% This function includes an automated approach to divide a full year
-% of vegetation index data into appropriate sections for a spring sigmoid
-% and a fall sigmoid, and make an initial guess at the parameters.  There
-% are probably many ways to do this I am interested in your thoughts on
-% whether or not this is useful, and if so, others ways it might be done.
-%
-% Several metaparameters controlling the approach here
-% are arbitrary and were selected from experience with particular data
-% sets.  The initial cut of the year is done at DOY 200, which was judged
-% to be approximately in the middle of summer.  The two halves of the year
-% are further truncated, and the initial guess is constructed, based on a
-% rough model of accumulated days before or after low and high percentiles
-% of data intended as rough onset, peak, offset, and dormancy dates.  The
-% parameters that control which percentile and the number of accumulated
-% days are also arbitrary and specific to a particular data set.
-% 
-% In a general approach it may be good to subject these metaparameters to
-% some sort of optimization across the entire data set of all sites,
-% inform the metaparameters using site specific climate information,
-% or develop rules of thumb for particular types of vegetation indices.
 %
 %============================================
 % Stephen Klosterman
@@ -49,26 +25,14 @@ function [params, modelT, modelY, cutOffDates, resnorm, initGuess,...
 % steve.klosterman@gmail.com
 %============================================
 
-%% dealing with partial years
-%report zero params if a season is missing
-
 %% default arguments
 % set non-default options for matlab's parameter estimation algorithm
 options = optimset('MaxFunEvals', 4*1e3, 'MaxIter', 4*1e3,...
     'Display', 'off' );
-% weighting{1} = 'timeExponential';
-% weighting{2} = 2;
-
 weighting.type = 'none';
 weighting.weight = 1;
 
-% weighting{1} = 'none';
-
-%% initial guess
-%the approach for
-%producing an initial guess for the 'b' parameter may need to be modified.
-
-%Initial cut to divide the year halfway into two seasons
+%Initial cut to divide the year into two seasons
 halfYear = 200;
 
 %%============================================
@@ -80,7 +44,6 @@ halfYear = 200;
 firstHalfYearIndices = dataT <= halfYear;
 firstHalfYearTime = dataT(firstHalfYearIndices);
 firstHalfYearData = dataY(firstHalfYearIndices);
-
 
 %% initial guess for parameters
 % only do this if there is enough spring time in the data set
